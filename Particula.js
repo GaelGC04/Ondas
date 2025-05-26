@@ -32,6 +32,7 @@ class Particula {
         const canvasWidth = contexto.canvas.width;
         const canvasHeight = contexto.canvas.height;
         
+        // Se definen los límites del canva
         const limiteDerecho = canvasWidth + (2 * this.gridWidth);
         const limiteIzquierdo = - (2 * this.gridWidth);
         const limiteInferior = canvasHeight + (2 * this.gridHeight);
@@ -62,25 +63,28 @@ class Particula {
                 const dy = this.y - mouse.y;
                 const distancia = Math.sqrt(dx * dx + dy * dy);
 
+                // En caso de ser mayor al tamaño normal se encoge
                 if (this.tamanio > tamanioParticulas) {
                     this.tamanio *= this.friccion;
                     if (this.tamanio < tamanioParticulas) {
                         this.tamanio = tamanioParticulas;
                     }
                 }
-
+                
                 if (ondaAncho > distancia) {
-                    const normalizado = 1 - (distancia / ondaAncho); 
-                    const tamanioFuerza = tamanioParticulas + (normalizado * this.tamanioMaximo);
+                    // Siempre y cuando sea menor al tamaño máximo se cambia el tamaño
+                    if (this.tamanio < this.tamanioMaximo) {
+                        const normalizado = 1 - (distancia / ondaAncho); 
+                        const tamanioFuerza = tamanioParticulas + (normalizado * this.tamanioMaximo);
 
-                    if (this.tamanio < tamanioFuerza) {
-                        this.tamanio += (tamanioFuerza - this.tamanio) * this.fuerzaOnda;
-                    }
-                    if (this.tamanio > this.tamanioMaximo) {
-                        this.tamanio = this.tamanioMaximo;
+                        // Se evita de que partículas que se siguen encogiendo no se encojan rápido al pasar la onda
+                        if (this.tamanio < tamanioFuerza) {
+                            this.tamanio += (tamanioFuerza - this.tamanio) * this.fuerzaOnda;
+                        }
                     }
                 }
             } else {
+                // En caso de que no haya mouse, se encogen todas las partículas
                 if (this.tamanio > tamanioParticulas) {
                     this.tamanio *= this.friccion;
                     if (this.tamanio < tamanioParticulas) {

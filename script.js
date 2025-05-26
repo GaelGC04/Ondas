@@ -4,27 +4,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const opcionesMouse = [
         ''
     ]
+    const opcionesOndaDireccion = [
+        'x',
+        'y',
+        'r' // Rotar
+    ];
     const contenedor = document.getElementById('contenedorOndas');
     const velocidad_x = 0.3;
     const velocidad_y = 0.5;
     const nFilas = 20;
     const nColumnas = 36;
     const ondasMouse = true;
+        const direccionOnda = opcionesOndaDireccion[0];
+        const velocidadOnda = 0.5;
     const ondaEncoge = true;
     const hoverLinea = false;
     const ondaAncho = 300;
     const angulo = 90;
-    const rotacionAutomatica = false;
     const fuerzaOnda = 0.1;
-    const friccionParticulas = 0.995;
+    const friccionParticulas = 0.99;
     const colorFondo = '5,0,12';
-    const tamanioParticulas = 0;
+    const tamanioParticulas = 1;
     const tamanioMaximoParticulas = 30;
-    const diferenciaTamanioParticulas = 50;
     const colores = ['#FFFFFF'];
 
-    // TODO Añadir poner opcion de que se puedan mover ondas una y otra vez en x direccion automaticamente
-    
     new Ondas(
         contenedor,
         velocidad_x,
@@ -36,13 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
         hoverLinea,
         ondaAncho,
         angulo,
-        rotacionAutomatica,
         fuerzaOnda,
         friccionParticulas,
         colorFondo,
         tamanioParticulas,
         tamanioMaximoParticulas,
-        diferenciaTamanioParticulas,
+        direccionOnda,
+        velocidadOnda,
         colores
     );
 });

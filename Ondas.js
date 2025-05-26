@@ -1,7 +1,7 @@
 import Particula from './Particula.js';
 
 class Ondas {
-    constructor(contenedor, velocidad_x, velocidad_y, nFilas, nColumnas, ondasMouse, ondaEncoge, hoverLinea, ondaAncho, angulo, rotacionAutomatica, fuerzaOnda, friccionParticulas, colorFondo, tamanioParticulas, tamanioMaximoParticulas, diferenciaTamanioParticulas, colores) {
+    constructor(contenedor, velocidad_x, velocidad_y, nFilas, nColumnas, ondasMouse, ondaEncoge, hoverLinea, ondaAncho, angulo, fuerzaOnda, friccionParticulas, colorFondo, tamanioParticulas, tamanioMaximoParticulas, direccionOnda, velocidadOnda, colores) {
         this.contenedor = contenedor;
         this.contexto = contenedor.getContext('2d'); // Se da que hay un contexto de graficos 2D
         
@@ -17,13 +17,11 @@ class Ondas {
         this.hoverLinea = hoverLinea; // Se hace una linea en las partículas
         this.ondaAncho = ondaAncho; // Anchura de mouse
         this.angulo = angulo; // Ángulo de la línea
-        this.rotacionAutomatica = rotacionAutomatica; // Gira la linea automáticamente
         this.fuerzaOnda = fuerzaOnda; // Fuerza del mouse y velocidad con que crecen las particulas
         this.friccionParticulas = friccionParticulas; // Fricción de las partículas
         this.colorFondo = colorFondo; // Color del fondo del canvas
         this.tamanioParticulas = tamanioParticulas; // Tamaño de las partículas
         this.tamanioMaximoParticulas = tamanioMaximoParticulas; // Tamaño máximo de las partículas
-        this.diferenciaTamanioParticulas = diferenciaTamanioParticulas; // Diferencia al tamaño de las particulas al encogerse / agrandarse
         this.colores = colores; // Colores de las partículas
 
         this.mousePresionado = false; // Sirve para indicar cuando el mouse está presionado siendo que no ocurren errores al sacarlo de la ventana o al moverlo
