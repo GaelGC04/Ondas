@@ -5,23 +5,23 @@ document.addEventListener('DOMContentLoaded', () => {
         ''
     ]
     const contenedor = document.getElementById('contenedorOndas');
-    const velocidad_x = 0.1;
-    const velocidad_y = -0.5;
-    const nFilas = 18;
-    const nColumnas = 26;
+    const velocidad_x = 0.3;
+    const velocidad_y = 0.5;
+    const nFilas = 20;
+    const nColumnas = 36;
     const ondasMouse = true;
     const ondaEncoge = true;
     const hoverLinea = false;
-    const ondaAncho = 550;
+    const ondaAncho = 300;
     const angulo = 90;
     const rotacionAutomatica = false;
     const fuerzaOnda = 0.1;
-    const friccionParticulas = 0.99;
-    const colorFondo = '255,255,255';
-    const tamanioParticulas = 2;
+    const friccionParticulas = 0.995;
+    const colorFondo = '5,0,12';
+    const tamanioParticulas = 0;
     const tamanioMaximoParticulas = 30;
     const diferenciaTamanioParticulas = 50;
-    const colores = ['#000000'];
+    const colores = ['#FFFFFF'];
 
     // TODO Añadir poner opcion de que se puedan mover ondas una y otra vez en x direccion automaticamente
     

@@ -24,7 +24,7 @@ class Particula {
         contexto.restore();
     }
 
-    actualizar(contexto, mouse, ondaAncho, ondasMouse, velocidad_x, velocidad_y, tamanioParticulas) {
+    actualizar(contexto, mouse, ondaAncho, ondasMouse, tamanioParticulas) {
         // Actualizar posición
         this.x += this.velocidad.x;
         this.y += this.velocidad.y;
@@ -73,7 +73,9 @@ class Particula {
                     const normalizado = 1 - (distancia / ondaAncho); 
                     const tamanioFuerza = tamanioParticulas + (normalizado * this.tamanioMaximo);
 
-                    this.tamanio += (tamanioFuerza - this.tamanio) * this.fuerzaOnda;
+                    if (this.tamanio < tamanioFuerza) {
+                        this.tamanio += (tamanioFuerza - this.tamanio) * this.fuerzaOnda;
+                    }
                     if (this.tamanio > this.tamanioMaximo) {
                         this.tamanio = this.tamanioMaximo;
                     }

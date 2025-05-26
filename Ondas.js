@@ -122,8 +122,6 @@ class Ondas {
                 this.mouse,
                 this.ondaAncho,
                 this.ondasMouse,
-                this.velocidad_x,
-                this.velocidad_y,
                 this.tamanioParticulas,
             );
         }
