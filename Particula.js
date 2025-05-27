@@ -121,12 +121,31 @@ class Particula {
                 }
             }
         } else {
+            // En caso de que se deshabilite el mouse se pone una linea con dirección en el contenedor automáticamente
             const dx = this.x - posOndaX;
             const dy = this.y - posOndaY;
             angulo = -angulo;
             const theta = (angulo + 90) * Math.PI / 180;
             let distancia = Math.abs(dx * Math.cos(theta) + dy * Math.sin(theta));
-            
+            if (this.tamanio > tamanioParticulas) {
+                this.tamanio *= this.friccion;
+                if (this.tamanio < tamanioParticulas) {
+                    this.tamanio = tamanioParticulas;
+                }
+            }
+                
+            if (ondaAncho > distancia) {
+                // Siempre y cuando sea menor al tamaño máximo se cambia el tamaño
+                if (this.tamanio < this.tamanioMaximo) {
+                    const normalizado = 1 - (distancia / ondaAncho); 
+                    const tamanioFuerza = tamanioParticulas + (normalizado * this.tamanioMaximo);
+
+                    // Se evita de que partículas que se siguen encogiendo no se encojan rápido al pasar la onda
+                    if (this.tamanio < tamanioFuerza) {
+                        this.tamanio += (tamanioFuerza - this.tamanio) * this.fuerzaOnda;
+                    }
+                }
+            }
         }
         
         this.dibujar(contexto);

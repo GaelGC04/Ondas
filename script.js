@@ -9,24 +9,24 @@ document.addEventListener('DOMContentLoaded', () => {
         'cuadrado',
         'elipse-x',
         'elipse-y',
+        'fondo' //TODO
     ]
     const contenedor = document.getElementById('contenedorOndas');
     const velocidad_x = 0.3;
     const velocidad_y = 0.5;
     const nFilas = 20;
     const nColumnas = 36;
-    const ondasMouse = true;
+    const ondasMouse = false;
         const formaOnda = opcionesOnda[1];
-        const angulo = 45;
-        const velocidad_xOnda = 0.0;
-        const velocidad_yOnda = 0.0;
+        const angulo = 135;
+        const velocidadOnda = 5;
     const ondaEncoge = true;
-    const ondaAncho = 300;
+    const ondaAncho = 800;
     const fuerzaOnda = 0.1;
     const friccionParticulas = 0.99;
     const colorFondo = '5,0,12';
     const tamanioParticulas = 1;
-    const tamanioMaximoParticulas = 30;
+    const tamanioMaximoParticulas = 25;
     const colores = ['#FFFFFF'];
 
     new Ondas(
@@ -45,8 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tamanioParticulas,
         tamanioMaximoParticulas,
         formaOnda,
-        velocidad_xOnda,
-        velocidad_yOnda,
+        velocidadOnda,
         colores
     );
 });

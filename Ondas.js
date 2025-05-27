@@ -1,7 +1,7 @@
 import Particula from './Particula.js';
 
 class Ondas {
-    constructor(contenedor, velocidad_x, velocidad_y, nFilas, nColumnas, ondasMouse, ondaEncoge, ondaAncho, angulo, fuerzaOnda, friccionParticulas, colorFondo, tamanioParticulas, tamanioMaximoParticulas, formaOnda, velocidad_xOnda, velocidad_yOnda, colores) {
+    constructor(contenedor, velocidad_x, velocidad_y, nFilas, nColumnas, ondasMouse, ondaEncoge, ondaAncho, angulo, fuerzaOnda, friccionParticulas, colorFondo, tamanioParticulas, tamanioMaximoParticulas, formaOnda, velocidadOnda, colores) {
         this.contenedor = contenedor;
         this.contexto = contenedor.getContext('2d'); // Se da que hay un contexto de graficos 2D
         
@@ -15,7 +15,7 @@ class Ondas {
         this.ondasMouse = ondasMouse; // Se toma en cuenta el mouse, en caso de ser falso las ondas son automáticas
         this.ondaEncoge = ondaEncoge; // Se encogen las particulas al pasar la onda
         this.ondaAncho = ondaAncho; // Anchura de mouse
-        this.angulo = angulo; // Ángulo de la línea
+        this.angulo = (angulo >= 0 && angulo <= 180) ? angulo : 0; // Ángulo de la línea
         this.fuerzaOnda = fuerzaOnda; // Fuerza del mouse y velocidad con que crecen las particulas
         this.friccionParticulas = friccionParticulas; // Fricción de las partículas
         this.colorFondo = colorFondo; // Color del fondo del canvas
@@ -24,8 +24,9 @@ class Ondas {
         this.formaOnda = formaOnda; // Forma de la onda que se genera al pasar el mouse
         this.colores = colores; // Colores de las partículas
 
-        this.velocidad_xOnda = velocidad_xOnda; // Velocidad de la onda en eje x
-        this.velocidad_yOnda = velocidad_yOnda; // Velocidad de la onda en eje y
+        this.velocidadOnda = velocidadOnda; // Velocidad de la onda
+        this.velocidadOndaX; // Velocidad de la onda en x
+        this.velocidadOndaY; // Velocidad de la onda en y
 
         this.mousePresionado = false; // Sirve para indicar cuando el mouse está presionado siendo que no ocurren errores al sacarlo de la ventana o al moverlo
 
@@ -39,18 +40,6 @@ class Ondas {
     setup() {
         this.redimensionar();
         window.addEventListener('resize', this.redimensionar.bind(this));
-        
-        if (this.velocidad_xOnda < 0) {
-            this.posOndaX = this.contenedor.width + this.contenedor.offsetLeft;
-        } else {
-            this.posOndaX = this.contenedor.offsetLeft;
-        }
-
-        if (this.velocidad_yOnda < 0) {
-            this.posOndaY = this.contenedor.height + this.contenedor.offsetTop;
-        } else {
-            this.posOndaY = this.contenedor.offsetTop;
-        }
 
         window.addEventListener('mousemove', (e) => {
             if (this.mousePresionado == false) {
@@ -103,6 +92,55 @@ class Ondas {
     redimensionar() {
         this.contenedor.width = window.innerWidth;
         this.contenedor.height = window.innerHeight;
+        
+        if ((this.angulo < 45 && this.angulo >= 0) || (this.angulo > 135 && this.angulo <= 180)) {
+            this.velocidadOndaY = this.velocidadOnda;
+            this.velocidadOndaX = 0;
+        } else {
+            this.velocidadOndaX = this.velocidadOnda;
+            this.velocidadOndaY = 0;
+        }
+
+        const margen = 1.5 * this.ondaAncho;
+        const limiteIzquierdo = this.contenedor.offsetLeft - margen;
+        const limiteDerecho = this.contenedor.offsetLeft + this.contenedor.width + margen;
+        const limiteSuperior = this.contenedor.offsetTop - margen;
+        const limiteInferior = this.contenedor.offsetTop + this.contenedor.height + margen;
+
+        if (this.angulo >= 0 && this.angulo < 45) {
+            if (this.velocidadOnda < 0) {
+                this.posOndaX = this.velocidadOndaX < 0 ? limiteIzquierdo : limiteDerecho;
+                this.posOndaY = this.velocidadOndaY < 0 ? limiteInferior : limiteSuperior;
+            } else {
+                this.posOndaX = this.velocidadOndaX < 0 ? limiteDerecho : limiteIzquierdo;
+                this.posOndaY = this.velocidadOndaY < 0 ? limiteInferior : limiteSuperior;
+            }
+        } else if (this.angulo >= 45 && this.angulo <= 90) {
+            if (this.velocidadOnda < 0) {
+                this.posOndaX = this.velocidadOndaX < 0 ? limiteDerecho : limiteIzquierdo;
+                this.posOndaY = this.velocidadOndaY < 0 ? limiteSuperior : limiteInferior;
+            } else {
+                this.posOndaX = this.velocidadOndaX < 0 ? limiteDerecho : limiteIzquierdo;
+                this.posOndaY = this.velocidadOndaY < 0 ? limiteInferior : limiteSuperior;
+            }
+        } else if (this.angulo > 90 && this.angulo <= 135) {
+            if (this.velocidadOnda < 0) {
+                this.posOndaX = this.velocidadOndaX < 0 ? limiteDerecho : limiteIzquierdo;
+                this.posOndaY = this.velocidadOndaY < 0 ? limiteInferior : limiteSuperior;
+            } else {
+                this.posOndaX = this.velocidadOndaX < 0 ? limiteDerecho : limiteIzquierdo;
+                this.posOndaY = this.velocidadOndaY < 0 ? limiteSuperior : limiteInferior;
+            }
+        } else if (this.angulo > 135 && this.angulo <= 180) {
+            if (this.velocidadOnda < 0) {
+                this.posOndaX = this.velocidadOndaX < 0 ? limiteDerecho : limiteIzquierdo;
+                this.posOndaY = this.velocidadOndaY < 0 ? limiteInferior : limiteSuperior;
+            } else {
+                this.posOndaX = this.velocidadOndaX < 0 ? limiteIzquierdo : limiteDerecho;
+                this.posOndaY = this.velocidadOndaY < 0 ? limiteInferior : limiteSuperior;
+            }
+        }
+
         this.generarParticulas();
     }
 
@@ -129,10 +167,36 @@ class Ondas {
 
     animar() {
         requestAnimationFrame(this.animar.bind(this));
+        
         if (this.ondasMouse == false) {
-            this.velocidad_xOnda += this.velocidad_x;
-            this.velocidad_yOnda += this.velocidad_y;
+            this.posOndaX += this.velocidadOndaX;
+            this.posOndaY += this.velocidadOndaY;
+
+            const margen = 1.5 * this.ondaAncho;
+            const limiteIzquierdo = this.contenedor.offsetLeft - margen;
+            const limiteDerecho = this.contenedor.offsetLeft + this.contenedor.width + margen;
+            const limiteSuperior = this.contenedor.offsetTop - margen;
+            const limiteInferior = this.contenedor.offsetTop + this.contenedor.height + margen;
+
+            if ((this.angulo < 45 && this.angulo >= 0) || (this.angulo > 135 && this.angulo <= 180)) {
+                if (this.posOndaX < limiteIzquierdo - this.contenedor.width || this.posOndaX > limiteDerecho + this.contenedor.width) {
+                    this.posOndaX = this.velocidadOndaX < 0 ? limiteDerecho : limiteIzquierdo;
+                }
+
+                if (this.posOndaY < limiteSuperior - this.contenedor.height || this.posOndaY > limiteInferior + this.contenedor.height) {
+                    this.posOndaY = this.velocidadOndaY < 0 ? limiteInferior : limiteSuperior;
+                }
+            } else {
+                if (this.posOndaX < limiteIzquierdo - this.contenedor.width || this.posOndaX > limiteDerecho + this.contenedor.width) {
+                    this.posOndaX = this.velocidadOndaX < 0 ? limiteDerecho : limiteIzquierdo;
+                }
+
+                if (this.posOndaY < limiteSuperior - this.contenedor.height || this.posOndaY > limiteInferior + this.contenedor.height) {
+                    this.posOndaY = this.velocidadOndaY < 0 ? limiteSuperior : limiteInferior;
+                }
+            }
         }
+
         this.contexto.fillStyle = `rgba(${this.colorFondo})`;
         this.contexto.fillRect(0, 0, this.contenedor.width, this.contenedor.height);
         // Actualizar y dibujar partículas
