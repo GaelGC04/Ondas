@@ -1,7 +1,7 @@
 import Particula from './Particula.js';
 
 class Ondas {
-    constructor(contenedor, velocidad_x, velocidad_y, nFilas, nColumnas, ondasMouse, ondaEncoge, ondaAncho, angulo, fuerzaOnda, friccionParticulas, colorFondo, tamanioParticulas, tamanioMaximoParticulas, formaOnda, velocidadOnda, colores) {
+    constructor(contenedor, velocidad_x, velocidad_y, nFilas, nColumnas, ondasMouse, ondaEncoge, ondaAncho, angulo, fuerzaOnda, friccionParticulas, colorFondo, tamanioParticulas, tamanioMaximoParticulas, formaOnda, velocidadOnda, colores, fondoImg) {
         this.contenedor = contenedor;
         this.contexto = contenedor.getContext('2d'); // Se da que hay un contexto de graficos 2D
         
@@ -32,6 +32,15 @@ class Ondas {
 
         this.posOndaX; // Posición de la onda en eje x
         this.posOndaY; // Posición de la onda en eje y
+
+        this.fondoImg = null; // Imagen de fondo del canvas
+        if (fondoImg) {
+            this.fondoImg = new Image();
+            this.fondoImg.onerror = () => {
+                this.fondoImg = '';
+            };
+            this.fondoImg.src = fondoImg;
+        }
 
         this.setup();
         this.animar();
@@ -178,6 +187,7 @@ class Ondas {
             const limiteSuperior = this.contenedor.offsetTop - margen;
             const limiteInferior = this.contenedor.offsetTop + this.contenedor.height + margen;
 
+            // Se ajusta la posición de X y Y de la onda a partir del ángulo y velocidad
             if ((this.angulo < 45 && this.angulo >= 0) || (this.angulo > 135 && this.angulo <= 180)) {
                 if (this.posOndaX < limiteIzquierdo - this.contenedor.width || this.posOndaX > limiteDerecho + this.contenedor.width) {
                     this.posOndaX = this.velocidadOndaX < 0 ? limiteDerecho : limiteIzquierdo;
@@ -197,8 +207,37 @@ class Ondas {
             }
         }
 
-        this.contexto.fillStyle = `rgba(${this.colorFondo})`;
-        this.contexto.fillRect(0, 0, this.contenedor.width, this.contenedor.height);
+        if (this.fondoImg != '' && this.fondoImg.complete) {
+            const aspectoImg = this.fondoImg.width / this.fondoImg.height;
+            const aspectoCanvas = this.contenedor.width / this.contenedor.height;
+            let drawWidth, drawHeight, offsetX, offsetY;
+
+            if (aspectoImg > aspectoCanvas) {
+                // Por si la imagen es más ancha que el canvas
+                drawHeight = this.contenedor.height;
+                drawWidth = drawHeight * aspectoImg;
+                offsetX = (this.contenedor.width - drawWidth) / 2;
+                offsetY = 0;
+            } else {
+                // Por si la imagen es más alta que el canvas
+                drawWidth = this.contenedor.width;
+                drawHeight = drawWidth / aspectoImg;
+                offsetX = 0;
+                offsetY = (this.contenedor.height - drawHeight) / 2;
+            }
+
+            this.contexto.drawImage(
+                this.fondoImg,
+                offsetX,
+                offsetY,
+                drawWidth,
+                drawHeight
+            );
+
+        } else {
+            this.contexto.fillStyle = `rgba(${this.colorFondo})`;
+            this.contexto.fillRect(0, 0, this.contenedor.width, this.contenedor.height);
+        }
         // Actualizar y dibujar partículas
         for (let iteradorParticulas = 0; iteradorParticulas < this.particulas.length; iteradorParticulas++) {
             // Se actualizan las partículas del arreglo
