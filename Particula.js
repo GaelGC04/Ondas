@@ -1,6 +1,6 @@
 class Particula {
     // Se contruye la particula con estos parámetros
-    constructor(x, y, tamanio, tamanioMaximo, color, velocidad, friccion, fuerzaOnda, gridWidth, gridHeight, formaOnda) {
+    constructor(x, y, tamanio, tamanioMaximo, color, velocidad, friccion, fuerzaOnda, gridWidth, gridHeight, formaOnda, imagenParticula, formaParticula) {
         this.x = x;
         this.y = y;
         this.tamanio = tamanio;
@@ -12,17 +12,83 @@ class Particula {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
         this.formaOnda = formaOnda;
+        this.imagenParticula = imagenParticula;
+        if (imagenParticula) {
+            this.imagenParticula = new Image();
+            this.imagenParticula.crossOrigin = "Anonymous";
+            this.imagenParticula.onerror = () => {
+                this.imagenParticula = '';
+            };
+            this.imagenParticula.src = imagenParticula;
+        }
+        this.formaParticula = formaParticula;
     }
 
     dibujar(contexto) {
-        contexto.save();
-        contexto.globalAlpha = 1;
-        contexto.fillStyle = this.color;
-        contexto.beginPath();
-        contexto.arc(this.x, this.y, this.tamanio, 0, Math.PI * 2);
-        contexto.closePath();
-        contexto.fill();
-        contexto.restore();
+        if (this.imagenParticula != '' && this.imagenParticula.complete) {
+            contexto.save();
+            contexto.globalAlpha = 1;
+            const tamanioImagen = this.tamanio * 2;
+            contexto.drawImage(
+                this.imagenParticula,
+                this.x - tamanioImagen/2,
+                this.y - tamanioImagen/2,
+                tamanioImagen,
+                tamanioImagen
+            );
+            contexto.restore();
+        } else {
+            contexto.save();
+            contexto.globalAlpha = 1;
+            contexto.fillStyle = this.color;
+            contexto.beginPath();
+            // Se hacen las figuras de las partículas
+            switch (this.formaParticula) {
+                case 'circulo':
+                    contexto.arc(this.x, this.y, this.tamanio, 0, Math.PI * 2);
+                    break;
+                case 'cuadrado':
+                    contexto.rect(this.x - this.tamanio, this.y - this.tamanio, this.tamanio * 2, this.tamanio * 2);
+                    break;
+                case 'rombo':
+                    contexto.moveTo(this.x, this.y - this.tamanio);
+                    contexto.lineTo(this.x + this.tamanio, this.y);
+                    contexto.lineTo(this.x, this.y + this.tamanio);
+                    contexto.lineTo(this.x - this.tamanio, this.y);
+                    break;
+                case 'triangulo':
+                    contexto.moveTo(this.x, this.y - this.tamanio);
+                    contexto.lineTo(this.x + this.tamanio, this.y + this.tamanio);
+                    contexto.lineTo(this.x - this.tamanio, this.y + this.tamanio);
+                    break;
+                case 'estrella':
+                    const radioInterior = this.tamanio / 2;
+                    contexto.moveTo(this.x, this.y - this.tamanio);
+                    for (let iteradorLados = 0; iteradorLados < 5; iteradorLados++) {
+                        contexto.lineTo(
+                            this.x + this.tamanio * Math.cos((iteradorLados * 2 * Math.PI) / 5 - Math.PI / 2),
+                            this.y + this.tamanio * Math.sin((iteradorLados * 2 * Math.PI) / 5 - Math.PI / 2)
+                        );
+                        contexto.lineTo(
+                            this.x + radioInterior * Math.cos(((iteradorLados * 2 + 1) * Math.PI) / 5 - Math.PI / 2),
+                            this.y + radioInterior * Math.sin(((iteradorLados * 2 + 1) * Math.PI) / 5 - Math.PI / 2)
+                        );
+                    }
+                    break;
+                case 'elipse-x':
+                    contexto.ellipse(this.x, this.y, this.tamanio, this.tamanio * 0.6, 0, 0, Math.PI * 2);
+                    break;
+                case 'elipse-y':
+                    contexto.ellipse(this.x, this.y, this.tamanio * 0.6, this.tamanio, 0, 0, Math.PI * 2);
+                    break;
+                default:
+                    contexto.arc(this.x, this.y, this.tamanio, 0, Math.PI * 2);
+                    break;
+            }
+            contexto.closePath();
+            contexto.fill();
+            contexto.restore();
+        }
     }
 
     actualizar(contexto, mouse, ondaAncho, ondasMouse, tamanioParticulas, angulo, posOndaX, posOndaY) {

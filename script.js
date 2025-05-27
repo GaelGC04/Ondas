@@ -8,8 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
         'cruz',
         'cuadrado',
         'elipse-x',
-        'elipse-y',
-        'fondo' //TODO
+        'elipse-y'
+    ]
+    const formasParticulas = [
+        'circulo',
+        'cuadrado',
+        'rombo',
+        'triangulo',
+        'estrella',
+        'elipse-x',
+        'elipse-y'
     ]
     const contenedor = document.getElementById('contenedorOndas');
     const velocidad_x = 0.3;
@@ -20,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const formaOnda = opcionesOnda[0];
         const angulo = 135;
         const velocidadOnda = 5;
-    const ondaEncoge = true;
     const ondaAncho = 250;
     const fuerzaOnda = 0.1;
     const friccionParticulas = 0.99;
@@ -29,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const tamanioMaximoParticulas = 20;
     const colores = ['#000000'];
     const fondoImg = 'https://cdn.pixabay.com/photo/2023/04/13/17/08/forest-7922999_1280.jpg';
+    const particulasImg = '';
+    const formaParticula = formasParticulas[2];
 
     new Ondas(
         contenedor,
@@ -37,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         nFilas,
         nColumnas,
         ondasMouse,
-        ondaEncoge,
         ondaAncho,
         angulo,
         fuerzaOnda,
@@ -48,6 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
         formaOnda,
         velocidadOnda,
         colores,
-        fondoImg
+        fondoImg,
+        particulasImg,
+        formaParticula
     );
 });

@@ -1,7 +1,7 @@
 import Particula from './Particula.js';
 
 class Ondas {
-    constructor(contenedor, velocidad_x, velocidad_y, nFilas, nColumnas, ondasMouse, ondaEncoge, ondaAncho, angulo, fuerzaOnda, friccionParticulas, colorFondo, tamanioParticulas, tamanioMaximoParticulas, formaOnda, velocidadOnda, colores, fondoImg) {
+    constructor(contenedor, velocidad_x, velocidad_y, nFilas, nColumnas, ondasMouse, ondaAncho, angulo, fuerzaOnda, friccionParticulas, colorFondo, tamanioParticulas, tamanioMaximoParticulas, formaOnda, velocidadOnda, colores, fondoImg, particulasImg, formaParticula) {
         this.contenedor = contenedor;
         this.contexto = contenedor.getContext('2d'); // Se da que hay un contexto de graficos 2D
         
@@ -13,7 +13,6 @@ class Ondas {
         this.nFilas = nFilas; // Cantidad de particulas en filas
         this.nColumnas = nColumnas; // Cantidad de particulas en columnas
         this.ondasMouse = ondasMouse; // Se toma en cuenta el mouse, en caso de ser falso las ondas son automáticas
-        this.ondaEncoge = ondaEncoge; // Se encogen las particulas al pasar la onda
         this.ondaAncho = ondaAncho; // Anchura de mouse
         this.angulo = (angulo >= 0 && angulo <= 180) ? angulo : 0; // Ángulo de la línea
         this.fuerzaOnda = fuerzaOnda; // Fuerza del mouse y velocidad con que crecen las particulas
@@ -36,11 +35,15 @@ class Ondas {
         this.fondoImg = null; // Imagen de fondo del canvas
         if (fondoImg) {
             this.fondoImg = new Image();
+            this.fondoImg.crossOrigin = "Anonymous";
             this.fondoImg.onerror = () => {
                 this.fondoImg = '';
             };
             this.fondoImg.src = fondoImg;
         }
+
+        this.particulasImg = particulasImg; // Imagen de las partículas
+        this.formaParticula = formaParticula; // Forma de las partículas
 
         this.setup();
         this.animar();
@@ -170,7 +173,9 @@ class Ondas {
             this.fuerzaOnda,
             gridWidth,
             gridHeight,
-            this.formaOnda
+            this.formaOnda,
+            this.particulasImg,
+            this.formaParticula
         ));
     }
 
@@ -249,7 +254,7 @@ class Ondas {
                 this.tamanioParticulas,
                 this.angulo,
                 this.posOndaX,
-                this.posOndaY
+                this.posOndaY,
             );
         }
     }
