@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const contenedor = document.getElementById('contenedorOndas');
     const velocidad_x = 0.3;
     const velocidad_y = 0.5;
-    const nFilas = 20;
-    const nColumnas = 36;
+    const nFilas = 15;
+    const nColumnas = 27;
     const ondasMouse = false;
         const formaOnda = opcionesOnda[0];
         const angulo = 135;
-        const velocidadOnda = -5;
+        const velocidadOnda = 5;
     const ondaEncoge = true;
     const ondaAncho = 250;
     const fuerzaOnda = 0.1;
@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const colorFondo = '5,0,12';
     const tamanioParticulas = 0.5;
     const tamanioMaximoParticulas = 20;
-    const colores = ['#8a5654'];
-    const fondoImg = 'https://cdn.pixabay.com/photo/2023/07/19/12/40/trees-8136806_960_720.png';
+    const colores = ['#000000'];
+    const fondoImg = 'https://cdn.pixabay.com/photo/2023/04/13/17/08/forest-7922999_1280.jpg';
 
     new Ondas(
         contenedor,
