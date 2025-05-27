@@ -1,7 +1,7 @@
 import Particula from './Particula.js';
 
 class Ondas {
-    constructor(contenedor, velocidad_x, velocidad_y, nFilas, nColumnas, ondasMouse, ondaEncoge, hoverLinea, ondaAncho, angulo, fuerzaOnda, friccionParticulas, colorFondo, tamanioParticulas, tamanioMaximoParticulas, direccionOnda, velocidadOnda, colores) {
+    constructor(contenedor, velocidad_x, velocidad_y, nFilas, nColumnas, ondasMouse, ondaEncoge, ondaAncho, angulo, fuerzaOnda, friccionParticulas, colorFondo, tamanioParticulas, tamanioMaximoParticulas, formaOnda, velocidad_xOnda, velocidad_yOnda, colores) {
         this.contenedor = contenedor;
         this.contexto = contenedor.getContext('2d'); // Se da que hay un contexto de graficos 2D
         
@@ -14,7 +14,6 @@ class Ondas {
         this.nColumnas = nColumnas; // Cantidad de particulas en columnas
         this.ondasMouse = ondasMouse; // Se toma en cuenta el mouse, en caso de ser falso las ondas son automáticas
         this.ondaEncoge = ondaEncoge; // Se encogen las particulas al pasar la onda
-        this.hoverLinea = hoverLinea; // Se hace una linea en las partículas
         this.ondaAncho = ondaAncho; // Anchura de mouse
         this.angulo = angulo; // Ángulo de la línea
         this.fuerzaOnda = fuerzaOnda; // Fuerza del mouse y velocidad con que crecen las particulas
@@ -22,9 +21,16 @@ class Ondas {
         this.colorFondo = colorFondo; // Color del fondo del canvas
         this.tamanioParticulas = tamanioParticulas; // Tamaño de las partículas
         this.tamanioMaximoParticulas = tamanioMaximoParticulas; // Tamaño máximo de las partículas
+        this.formaOnda = formaOnda; // Forma de la onda que se genera al pasar el mouse
         this.colores = colores; // Colores de las partículas
 
+        this.velocidad_xOnda = velocidad_xOnda; // Velocidad de la onda en eje x
+        this.velocidad_yOnda = velocidad_yOnda; // Velocidad de la onda en eje y
+
         this.mousePresionado = false; // Sirve para indicar cuando el mouse está presionado siendo que no ocurren errores al sacarlo de la ventana o al moverlo
+
+        this.posOndaX; // Posición de la onda en eje x
+        this.posOndaY; // Posición de la onda en eje y
 
         this.setup();
         this.animar();
@@ -34,6 +40,18 @@ class Ondas {
         this.redimensionar();
         window.addEventListener('resize', this.redimensionar.bind(this));
         
+        if (this.velocidad_xOnda < 0) {
+            this.posOndaX = this.contenedor.width + this.contenedor.offsetLeft;
+        } else {
+            this.posOndaX = this.contenedor.offsetLeft;
+        }
+
+        if (this.velocidad_yOnda < 0) {
+            this.posOndaY = this.contenedor.height + this.contenedor.offsetTop;
+        } else {
+            this.posOndaY = this.contenedor.offsetTop;
+        }
+
         window.addEventListener('mousemove', (e) => {
             if (this.mousePresionado == false) {
                 this.mouse.x = e.clientX;
@@ -104,12 +122,17 @@ class Ondas {
             this.friccionParticulas,
             this.fuerzaOnda,
             gridWidth,
-            gridHeight
+            gridHeight,
+            this.formaOnda
         ));
     }
 
     animar() {
         requestAnimationFrame(this.animar.bind(this));
+        if (this.ondasMouse == false) {
+            this.velocidad_xOnda += this.velocidad_x;
+            this.velocidad_yOnda += this.velocidad_y;
+        }
         this.contexto.fillStyle = `rgba(${this.colorFondo})`;
         this.contexto.fillRect(0, 0, this.contenedor.width, this.contenedor.height);
         // Actualizar y dibujar partículas
@@ -121,6 +144,9 @@ class Ondas {
                 this.ondaAncho,
                 this.ondasMouse,
                 this.tamanioParticulas,
+                this.angulo,
+                this.posOndaX,
+                this.posOndaY
             );
         }
     }

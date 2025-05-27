@@ -1,6 +1,6 @@
 class Particula {
     // Se contruye la particula con estos parámetros
-    constructor(x, y, tamanio, tamanioMaximo, color, velocidad, friccion, fuerzaOnda, gridWidth, gridHeight) {
+    constructor(x, y, tamanio, tamanioMaximo, color, velocidad, friccion, fuerzaOnda, gridWidth, gridHeight, formaOnda) {
         this.x = x;
         this.y = y;
         this.tamanio = tamanio;
@@ -11,6 +11,7 @@ class Particula {
         this.fuerzaOnda = fuerzaOnda;
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
+        this.formaOnda = formaOnda;
     }
 
     dibujar(contexto) {
@@ -24,7 +25,7 @@ class Particula {
         contexto.restore();
     }
 
-    actualizar(contexto, mouse, ondaAncho, ondasMouse, tamanioParticulas) {
+    actualizar(contexto, mouse, ondaAncho, ondasMouse, tamanioParticulas, angulo, posOndaX, posOndaY) {
         // Actualizar posición
         this.x += this.velocidad.x;
         this.y += this.velocidad.y;
@@ -61,7 +62,34 @@ class Particula {
             if (mouse.x && mouse.y) {
                 const dx = this.x - mouse.x;
                 const dy = this.y - mouse.y;
-                const distancia = Math.sqrt(dx * dx + dy * dy);
+                let distancia = Math.sqrt(dx * dx + dy * dy);
+                
+                switch (this.formaOnda) {
+                    case 'cuadrado':
+                        distancia = Math.max(Math.abs(dx), Math.abs(dy));
+                        break;
+                    case 'rombo':
+                        distancia = Math.abs(Math.abs(dy) + Math.abs(dx));
+                        break;
+                    case 'linea-angulo':
+                        angulo = -angulo;
+                        const theta = (angulo + 90) * Math.PI / 180;
+                        distancia = Math.abs(dx * Math.cos(theta) + dy * Math.sin(theta));
+                        break;
+                    case 'cruz':
+                        distancia = Math.abs(Math.abs(dy) - Math.abs(dx));
+                        break;
+                    case 'elipse-x':
+                        distancia = Math.sqrt((dx * 0.6)**2 + (dy)**2);
+                        break;
+                    case 'elipse-y':
+                        distancia = Math.sqrt((dx)**2 + (dy * 0.6)**2);
+                        break;
+                    default:
+                        break;
+                }
+
+
 
                 // En caso de ser mayor al tamaño normal se encoge
                 if (this.tamanio > tamanioParticulas) {
@@ -92,6 +120,13 @@ class Particula {
                     }
                 }
             }
+        } else {
+            const dx = this.x - posOndaX;
+            const dy = this.y - posOndaY;
+            angulo = -angulo;
+            const theta = (angulo + 90) * Math.PI / 180;
+            let distancia = Math.abs(dx * Math.cos(theta) + dy * Math.sin(theta));
+            
         }
         
         this.dibujar(contexto);
